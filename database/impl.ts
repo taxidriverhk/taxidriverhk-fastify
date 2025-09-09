@@ -28,6 +28,14 @@ export class SqlMapDatabase extends MapDatabase {
     return rows;
   }
 
+  async documentAsync(table: string, id: string): Promise<Nullable<string>> {
+    const { rowCount, rows } = await this.sqlClient.query<{ data: string }>(
+      `SELECT data FROM ${table} WHERE id = $1 AND (expiration IS NULL OR expiration > NOW())`,
+      [id]
+    );
+    return rowCount == null || rowCount < 1 ? null : rows[0].data;
+  }
+
   async mapsAsync(): Promise<Array<Map>> {
     const { rows } = await this.sqlClient.query<Map>(
       "SELECT category_id, icon, name, progress_percentage, release_date, status, target_game_version, update_date FROM maps"
@@ -103,6 +111,148 @@ export class SqlMapDatabase extends MapDatabase {
 export class MockMapDatabase extends MapDatabase {
   async categoriesAsync(): Promise<Array<Category>> {
     return [];
+  }
+
+  async documentAsync(table: string, id: string): Promise<Nullable<string>> {
+    return JSON.stringify({
+      symbol: "QQQM",
+      net_expense_ratio: "0.0015",
+      data: [
+        {
+          ex_dividend_date: "2025-06-23",
+          declaration_date: "2025-06-20",
+          record_date: "2025-06-23",
+          payment_date: "2025-06-27",
+          amount: "0.3161",
+        },
+        {
+          ex_dividend_date: "2025-03-24",
+          declaration_date: "2025-03-21",
+          record_date: "2025-03-24",
+          payment_date: "2025-03-28",
+          amount: "0.31763",
+        },
+        {
+          ex_dividend_date: "2024-12-23",
+          declaration_date: "2024-12-20",
+          record_date: "2024-12-23",
+          payment_date: "2024-12-27",
+          amount: "0.31031",
+        },
+        {
+          ex_dividend_date: "2024-09-23",
+          declaration_date: "2024-09-20",
+          record_date: "2024-09-23",
+          payment_date: "2024-09-27",
+          amount: "0.29987",
+        },
+        {
+          ex_dividend_date: "2024-06-24",
+          declaration_date: "2024-06-21",
+          record_date: "2024-06-24",
+          payment_date: "2024-06-28",
+          amount: "0.3199",
+        },
+        {
+          ex_dividend_date: "2024-03-18",
+          declaration_date: "2024-03-15",
+          record_date: "2024-03-19",
+          payment_date: "2024-03-22",
+          amount: "0.34537",
+        },
+        {
+          ex_dividend_date: "2023-12-18",
+          declaration_date: "2023-12-15",
+          record_date: "2023-12-19",
+          payment_date: "2023-12-22",
+          amount: "0.38069",
+        },
+        {
+          ex_dividend_date: "2023-09-18",
+          declaration_date: "2023-09-15",
+          record_date: "2023-09-19",
+          payment_date: "2023-09-22",
+          amount: "0.24483",
+        },
+        {
+          ex_dividend_date: "2023-06-20",
+          declaration_date: "2023-06-16",
+          record_date: "2023-06-21",
+          payment_date: "2023-06-23",
+          amount: "0.21666",
+        },
+        {
+          ex_dividend_date: "2023-03-20",
+          declaration_date: "2023-03-17",
+          record_date: "2023-03-21",
+          payment_date: "2023-03-24",
+          amount: "0.25433",
+        },
+        {
+          ex_dividend_date: "2022-12-19",
+          declaration_date: "2022-12-16",
+          record_date: "2022-12-20",
+          payment_date: "2022-12-23",
+          amount: "0.27037",
+        },
+        {
+          ex_dividend_date: "2022-09-19",
+          declaration_date: "2022-09-16",
+          record_date: "2022-09-20",
+          payment_date: "2022-09-23",
+          amount: "0.24535",
+        },
+        {
+          ex_dividend_date: "2022-06-21",
+          declaration_date: "2022-06-17",
+          record_date: "2022-06-22",
+          payment_date: "2022-06-30",
+          amount: "0.2052",
+        },
+        {
+          ex_dividend_date: "2022-03-21",
+          declaration_date: "2022-03-18",
+          record_date: "2022-03-22",
+          payment_date: "2022-03-31",
+          amount: "0.19362",
+        },
+        {
+          ex_dividend_date: "2021-12-20",
+          declaration_date: "2021-12-17",
+          record_date: "2021-12-21",
+          payment_date: "2021-12-31",
+          amount: "0.14881",
+        },
+        {
+          ex_dividend_date: "2021-09-20",
+          declaration_date: "2021-09-17",
+          record_date: "2021-09-21",
+          payment_date: "2021-09-30",
+          amount: "0.16624",
+        },
+        {
+          ex_dividend_date: "2021-06-21",
+          declaration_date: "2021-06-18",
+          record_date: "2021-06-22",
+          payment_date: "2021-06-30",
+          amount: "0.1824",
+        },
+        {
+          ex_dividend_date: "2021-03-22",
+          declaration_date: "2021-03-19",
+          record_date: "2021-03-23",
+          payment_date: "2021-03-31",
+          amount: "0.15749",
+        },
+        {
+          ex_dividend_date: "2020-12-21",
+          declaration_date: "2020-12-18",
+          record_date: "2020-12-22",
+          payment_date: "2020-12-31",
+          amount: "0.20626",
+        },
+      ],
+    });
   }
 
   async mapsAsync(): Promise<Array<Map>> {
