@@ -106,6 +106,17 @@ export class SqlMapDatabase extends MapDatabase {
     );
     return rowCount == null || rowCount < 1 ? null : rows[0];
   }
+
+  async upsertDocumentAsync(
+    table: string,
+    id: string,
+    content: string
+  ): Promise<void> {
+    await this.sqlClient.query(
+      `INSERT INTO ${table} (id, data, expiration) VALUES ($1, $2, NOW() + INTERVAL '30 days') ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, expiration = EXCLUDED.expiration`,
+      [id, content]
+    );
+  }
 }
 
 export class MockMapDatabase extends MapDatabase {
@@ -342,5 +353,9 @@ Test content with a \`code block\` here.
 
   async tutorialAsync(_id: string): Promise<Nullable<Tutorial>> {
     return (await this.tutorialsAsync())[0];
+  }
+
+  async upsertDocumentAsync(_: string, __: string, ___: string): Promise<void> {
+    // no-op
   }
 }

@@ -9,6 +9,7 @@ import {
   Map as MapItem,
   Tutorial,
 } from "./schemas";
+import getStockDataAsync from "./external/alpha-vantage";
 
 const server = fastify({
   logger: {
@@ -103,11 +104,25 @@ server.get<{
   Params: {
     symbol: string;
   };
+  Querystring: {
+    apiKey: string;
+  };
   Reply: string;
 }>("/stocks/:symbol", async (request, reply) => {
   const { symbol } = request.params;
-  if (!/^[A-Za-z]{1,5}$/.test(symbol)) {
-    reply.status(400).send("Invalid symbol");
+  const { apiKey } = request.query;
+  if (!/[A-Za-z]{1,5}/.test(symbol) || apiKey == null || apiKey.length === 0) {
+    reply.status(400).send("Invalid symbol or API key");
+    return;
+  }
+
+  const authApiKey = await usingDatabase(
+    server,
+    Database.DOCDB,
+    async (db) => await db.documentAsync("authorized_keys", apiKey)
+  );
+  if (authApiKey == null) {
+    reply.status(403).send("Unauthorized API key");
     return;
   }
 
@@ -120,8 +135,20 @@ server.get<{
   if (data != null) {
     reply.status(200).send(data);
   } else {
-    // TODO: fetch from Alpha Vantage and store into DB as cache
-    reply.status(404);
+    const stockData = await getStockDataAsync(symbol, apiKey, server);
+    if (stockData == null) {
+      reply.status(404);
+      return;
+    }
+
+    await usingDatabase(
+      server,
+      Database.DOCDB,
+      async (db) =>
+        await db.upsertDocumentAsync("stocks", symbol.toUpperCase(), stockData)
+    );
+
+    reply.status(200).send(stockData);
   }
 });
 

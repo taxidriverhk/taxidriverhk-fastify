@@ -18,4 +18,10 @@ export abstract class MapDatabase {
   abstract statisticsAsync(): Promise<Statistics>;
   abstract tutorialsAsync(): Promise<Array<Tutorial>>;
   abstract tutorialAsync(id: string): Promise<Nullable<Tutorial>>;
+
+  abstract upsertDocumentAsync(
+    table: string,
+    id: string,
+    content: string
+  ): Promise<void>;
 }
