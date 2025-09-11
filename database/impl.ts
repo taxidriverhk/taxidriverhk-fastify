@@ -28,8 +28,8 @@ export class SqlMapDatabase extends MapDatabase {
     return rows;
   }
 
-  async documentAsync(table: string, id: string): Promise<Nullable<string>> {
-    const { rowCount, rows } = await this.sqlClient.query<{ data: string }>(
+  async documentAsync<T>(table: string, id: string): Promise<Nullable<T>> {
+    const { rowCount, rows } = await this.sqlClient.query<{ data: T }>(
       `SELECT data FROM ${table} WHERE id = $1 AND (expiration IS NULL OR expiration > NOW())`,
       [id]
     );
@@ -107,14 +107,14 @@ export class SqlMapDatabase extends MapDatabase {
     return rowCount == null || rowCount < 1 ? null : rows[0];
   }
 
-  async upsertDocumentAsync(
+  async upsertDocumentAsync<T>(
     table: string,
     id: string,
-    content: string
+    content: T
   ): Promise<void> {
     await this.sqlClient.query(
       `INSERT INTO ${table} (id, data, expiration) VALUES ($1, $2, NOW() + INTERVAL '30 days') ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, expiration = EXCLUDED.expiration`,
-      [id, content]
+      [id, JSON.stringify(content)]
     );
   }
 }
@@ -124,8 +124,8 @@ export class MockMapDatabase extends MapDatabase {
     return [];
   }
 
-  async documentAsync(table: string, id: string): Promise<Nullable<string>> {
-    return JSON.stringify({
+  async documentAsync<T>(table: string, id: string): Promise<Nullable<T>> {
+    return {
       symbol: "QQQM",
       net_expense_ratio: "0.0015",
       data: [
@@ -263,7 +263,7 @@ export class MockMapDatabase extends MapDatabase {
           amount: "0.20626",
         },
       ],
-    });
+    } as T;
   }
 
   async mapsAsync(): Promise<Array<Map>> {
@@ -355,7 +355,7 @@ Test content with a \`code block\` here.
     return (await this.tutorialsAsync())[0];
   }
 
-  async upsertDocumentAsync(_: string, __: string, ___: string): Promise<void> {
+  async upsertDocumentAsync<T>(_: string, __: string, ___: T): Promise<void> {
     // no-op
   }
 }

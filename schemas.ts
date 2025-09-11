@@ -54,6 +54,17 @@ export type Tutorial = {
   title: string;
 };
 
+export type StockDocument = {
+  price: string;
+  profile: {
+    net_expense_ratio: string;
+  };
+  dividends: Array<{
+    amount: string;
+    ex_dividend_date: string;
+  }>;
+};
+
 // API models
 export type GetMapsResponse = {
   categories: Array<Category>;
@@ -67,3 +78,5 @@ export type GetStatisticsResponse = {
 export type GetTutorialsResponse = {
   tutorials: Array<Tutorial>;
 };
+
+export type GetStockDataResponse = StockDocument | string;

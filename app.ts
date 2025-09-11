@@ -5,11 +5,13 @@ import { Database } from "./database/types";
 import {
   GetMapsResponse,
   GetStatisticsResponse,
+  GetStockDataResponse,
   GetTutorialsResponse,
   Map as MapItem,
+  StockDocument,
   Tutorial,
 } from "./schemas";
-import getStockDataAsync from "./external/alpha-vantage";
+import getStockDataAsync from "./external/external-data-provider";
 
 const server = fastify({
   logger: {
@@ -107,7 +109,7 @@ server.get<{
   Querystring: {
     apiKey: string;
   };
-  Reply: string;
+  Reply: GetStockDataResponse;
 }>("/stocks/:symbol", async (request, reply) => {
   const { symbol } = request.params;
   const { apiKey } = request.query;
@@ -119,7 +121,7 @@ server.get<{
   const authApiKey = await usingDatabase(
     server,
     Database.DOCDB,
-    async (db) => await db.documentAsync("authorized_keys", apiKey)
+    async (db) => await db.documentAsync<{}>("authorized_keys", apiKey)
   );
   if (authApiKey == null) {
     reply.status(403).send("Unauthorized API key");
@@ -129,7 +131,8 @@ server.get<{
   const data = await usingDatabase(
     server,
     Database.DOCDB,
-    async (db) => await db.documentAsync("stocks", symbol.toUpperCase())
+    async (db) =>
+      await db.documentAsync<StockDocument>("stocks", symbol.toUpperCase())
   );
 
   if (data != null) {

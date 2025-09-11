@@ -11,7 +11,7 @@ export abstract class MapDatabase {
   close(): void {}
 
   abstract categoriesAsync(): Promise<Array<Category>>;
-  abstract documentAsync(table: string, id: string): Promise<Nullable<string>>;
+  abstract documentAsync<T>(table: string, id: string): Promise<Nullable<T>>;
   abstract mapsAsync(): Promise<Array<Map>>;
   abstract mapAsync(name: string): Promise<Nullable<Map>>;
   abstract mapAsyncById(id: string): Promise<Nullable<Map>>;
@@ -19,9 +19,9 @@ export abstract class MapDatabase {
   abstract tutorialsAsync(): Promise<Array<Tutorial>>;
   abstract tutorialAsync(id: string): Promise<Nullable<Tutorial>>;
 
-  abstract upsertDocumentAsync(
+  abstract upsertDocumentAsync<T>(
     table: string,
     id: string,
-    content: string
+    content: T
   ): Promise<void>;
 }

@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+import type { StockDocument } from "../schemas";
 
 const ENDPOINT = "https://www.alphavantage.co/query";
 
@@ -6,7 +7,7 @@ export default async function getStockDataAsync(
   symbol: string,
   apiKey: string,
   server: FastifyInstance
-): Promise<string | null> {
+): Promise<StockDocument | null> {
   try {
     const [dividendResponse, etfProfileResponse] = await Promise.all([
       fetch(`${ENDPOINT}?function=DIVIDENDS&symbol=${symbol}&apikey=${apiKey}`),
@@ -25,10 +26,11 @@ export default async function getStockDataAsync(
       dividendData.data &&
       etfProfileData
     ) {
-      return JSON.stringify({
+      return {
+        price: "123",
         profile: etfProfileData,
         dividends: dividendData.data,
-      });
+      };
     }
   } catch (error) {
     server.log.error("Error fetching stock data:", error);
