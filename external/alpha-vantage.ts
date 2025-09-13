@@ -32,7 +32,7 @@ export default async function getStockDataAsync(
         dividends: dividendData.data,
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     server.log.error("Error fetching stock data:", error);
   }
   return null;
