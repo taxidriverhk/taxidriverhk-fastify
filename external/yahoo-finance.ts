@@ -1,4 +1,4 @@
-import yahooFinance from "yahoo-finance2";
+import YahooFinance from "yahoo-finance2";
 import type { FastifyInstance } from "fastify";
 import type { StockDocument } from "../schemas";
 
@@ -6,6 +6,7 @@ export default async function getStockDataAsync(
   symbol: string,
   _: FastifyInstance
 ): Promise<StockDocument | null> {
+  const yahooFinance = new YahooFinance();
   const quoteSummary = await yahooFinance.quoteSummary(symbol);
   const fundProfile = (await yahooFinance.quote(symbol)) as {
     netExpenseRatio?: number;
@@ -13,7 +14,8 @@ export default async function getStockDataAsync(
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   const historical = await yahooFinance.historical(symbol, {
-    period1: oneYearAgo.toISOString().slice(0, 10),
+    period1: oneYearAgo,
+    period2: new Date(),
     events: "dividends",
   });
 
