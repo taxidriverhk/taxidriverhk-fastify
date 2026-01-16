@@ -1,8 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import type { StockDocument } from "../schemas";
+import type { StockDocument, OptionData } from "../schemas";
 
 import getStockDataFromAlphaVantageAsync from "./alpha-vantage";
-import getStockDataFromYahooFinanceAsync from "./yahoo-finance";
+import {
+  getStockDataAsync as getStockDataFromYahooFinanceAsync,
+  getOptionDataAsync as getOptionDataFromYahooFinanceAsync,
+} from "./yahoo-finance";
 
 enum ExternalDataProviders {
   ALPHA_VANTAGE,
@@ -12,7 +15,7 @@ enum ExternalDataProviders {
 const SELECTED_PROVIDER: ExternalDataProviders =
   ExternalDataProviders.YAHOO_FINANCE;
 
-export default async function getStockDataAsync(
+export async function getStockDataAsync(
   symbol: string,
   apiKey: string,
   server: FastifyInstance
@@ -23,6 +26,22 @@ export default async function getStockDataAsync(
       data = await getStockDataFromAlphaVantageAsync(symbol, apiKey, server);
     case ExternalDataProviders.YAHOO_FINANCE:
       data = await getStockDataFromYahooFinanceAsync(symbol, server);
+  }
+  return data;
+}
+
+export async function getOptionDataAsync(
+  optionTicker: string,
+  server: FastifyInstance
+): Promise<OptionData | null> {
+  let data: OptionData | null = null;
+  switch (SELECTED_PROVIDER) {
+    case ExternalDataProviders.ALPHA_VANTAGE:
+      // Not implemented for Alpha Vantage
+      break;
+    case ExternalDataProviders.YAHOO_FINANCE:
+      data = await getOptionDataFromYahooFinanceAsync(optionTicker, server);
+      break;
   }
   return data;
 }

@@ -65,6 +65,13 @@ export type StockDocument = {
   }>;
 };
 
+export type OptionData = {
+  expirationDate: string;
+  lastPrice: string;
+  strikePrice: string;
+  type: string;
+};
+
 // API models
 export type GetMapsResponse = {
   categories: Array<Category>;

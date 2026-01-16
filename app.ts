@@ -10,8 +10,12 @@ import {
   Map as MapItem,
   StockDocument,
   Tutorial,
+  OptionData,
 } from "./schemas";
-import getStockDataAsync from "./external/external-data-provider";
+import {
+  getStockDataAsync,
+  getOptionDataAsync,
+} from "./external/external-data-provider";
 
 const server = fastify({
   logger: {
@@ -153,6 +157,43 @@ server.get<{
 
     reply.status(200).send(stockData);
   }
+});
+
+server.get<{
+  Params: {
+    optionTicker: string;
+  };
+  Querystring: {
+    apiKey: string;
+  };
+  Reply: OptionData | string;
+}>("/stocks/options/:optionTicker", async (request, reply) => {
+  const { optionTicker } = request.params;
+  const { apiKey } = request.query;
+
+  if (apiKey == null || apiKey.length === 0) {
+    reply.status(400).send("Invalid API key");
+    return;
+  }
+
+  const authApiKey = await usingDatabase(
+    server,
+    Database.DOCDB,
+    async (db) => await db.documentAsync<{}>("authorized_keys", apiKey)
+  );
+  if (authApiKey == null) {
+    reply.status(403).send("Unauthorized API key");
+    return;
+  }
+
+  const optionData = await getOptionDataAsync(optionTicker, server);
+
+  if (optionData == null) {
+    reply.status(404).send("Option not found");
+    return;
+  }
+
+  reply.status(200).send(optionData);
 });
 
 server.listen({ port: 8090, host: "0.0.0.0" }, (err, address) => {
