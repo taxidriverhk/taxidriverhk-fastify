@@ -4,7 +4,7 @@ import type { StockDocument, OptionData } from "../schemas";
 
 export async function getStockDataAsync(
   symbol: string,
-  _: FastifyInstance
+  _: FastifyInstance,
 ): Promise<StockDocument | null> {
   const yahooFinance = new YahooFinance();
   const quoteSummary = await yahooFinance.quoteSummary(symbol);
@@ -13,6 +13,7 @@ export async function getStockDataAsync(
   };
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  oneYearAgo.setDate(1);
   const historical = await yahooFinance.historical(symbol, {
     period1: oneYearAgo,
     period2: new Date(),
@@ -37,7 +38,7 @@ export async function getStockDataAsync(
 
 export async function getOptionDataAsync(
   optionTicker: string,
-  _: FastifyInstance
+  _: FastifyInstance,
 ): Promise<OptionData | null> {
   const yahooFinance = new YahooFinance();
   const match = optionTicker.match(/^([A-Za-z]+)(\d{6})/);
