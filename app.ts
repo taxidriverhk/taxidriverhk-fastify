@@ -1,5 +1,6 @@
 import fastifyPostgres from "@fastify/postgres";
 import fastify from "fastify";
+import pg from "pg";
 import { getConnectionString, usingDatabase } from "./database/init";
 import { Database } from "./database/types";
 import {
@@ -22,6 +23,14 @@ const server = fastify({
     level: "info",
   },
 });
+
+// Parse BIGINT, INTEGER, NUMERIC, DECIMAL types back to numbers
+pg.types.setTypeParser(20, (value: string) => parseInt(value, 10)); // BIGINT
+pg.types.setTypeParser(23, (value: string) => parseInt(value, 10)); // INTEGER
+pg.types.setTypeParser(21, (value: string) => parseInt(value, 10)); // SMALLINT
+pg.types.setTypeParser(700, (value: string) => parseFloat(value)); // REAL
+pg.types.setTypeParser(701, (value: string) => parseFloat(value)); // DOUBLE PRECISION
+pg.types.setTypeParser(1700, (value: string) => parseFloat(value)); // NUMERIC
 
 Object.values(Database).forEach((db) => {
   const connectionString = getConnectionString(db);
@@ -60,7 +69,7 @@ server.get<{
   const map = await usingDatabase(server, Database.CSMAPS, async (db) =>
     Number.isNaN(idNumber)
       ? await db.mapAsync(name)
-      : await db.mapAsyncById(name)
+      : await db.mapAsyncById(name),
   );
 
   if (map != null) {
@@ -96,7 +105,7 @@ server.get<{
   const tutorial = await usingDatabase(
     server,
     Database.CSMAPS,
-    async (db) => await db.tutorialAsync(id)
+    async (db) => await db.tutorialAsync(id),
   );
 
   if (tutorial != null) {
@@ -125,7 +134,7 @@ server.get<{
   const authApiKey = await usingDatabase(
     server,
     Database.DOCDB,
-    async (db) => await db.documentAsync<{}>("authorized_keys", apiKey)
+    async (db) => await db.documentAsync<{}>("authorized_keys", apiKey),
   );
   if (authApiKey == null) {
     reply.status(403).send("Unauthorized API key");
@@ -136,7 +145,7 @@ server.get<{
     server,
     Database.DOCDB,
     async (db) =>
-      await db.documentAsync<StockDocument>("stocks", symbol.toUpperCase())
+      await db.documentAsync<StockDocument>("stocks", symbol.toUpperCase()),
   );
 
   if (data != null) {
@@ -152,7 +161,7 @@ server.get<{
       server,
       Database.DOCDB,
       async (db) =>
-        await db.upsertDocumentAsync("stocks", symbol.toUpperCase(), stockData)
+        await db.upsertDocumentAsync("stocks", symbol.toUpperCase(), stockData),
     );
 
     reply.status(200).send(stockData);
@@ -179,7 +188,7 @@ server.get<{
   const authApiKey = await usingDatabase(
     server,
     Database.DOCDB,
-    async (db) => await db.documentAsync<{}>("authorized_keys", apiKey)
+    async (db) => await db.documentAsync<{}>("authorized_keys", apiKey),
   );
   if (authApiKey == null) {
     reply.status(403).send("Unauthorized API key");
@@ -201,5 +210,5 @@ server.listen({ port: 8090, host: "0.0.0.0" }, (err, address) => {
     server.log.error(err);
     process.exit(1);
   }
-  server.log.info(`CS Maps server started at ${address}`);
+  server.log.info(`Fastify server started at ${address}`);
 });
