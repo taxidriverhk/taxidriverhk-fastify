@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import type { StockDocument } from "../schemas/stocks/schemas";
+import type { StockDocument } from "schemas/stocks/schemas";
 
 const ENDPOINT = "https://www.alphavantage.co/query";
 

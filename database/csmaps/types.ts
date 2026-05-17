@@ -1,5 +1,5 @@
-import type { Category, Map, Statistics, Tutorial } from "../../schemas/csmaps/schemas";
-import { Nullable } from "../types";
+import type { Category, Map, Statistics, Tutorial } from "schemas/csmaps/schemas";
+import { Nullable } from "database/types";
 
 export abstract class MapDatabase {
   close(): void {}

@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
-import { getConnectionString } from "../init";
-import { Database } from "../types";
-import { MockMapDatabase, SqlMapDatabase } from "./impl";
-import { MapDatabase } from "./types";
+import { getConnectionString } from "database/init";
+import { Database } from "database/types";
+import { MockMapDatabase, SqlMapDatabase } from "database/csmaps/impl";
+import { MapDatabase } from "database/csmaps/types";
 
 export async function usingDatabase<T>(
   server: FastifyInstance,

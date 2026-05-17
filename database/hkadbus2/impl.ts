@@ -9,7 +9,7 @@ import {
     SearchPhotoFilter,
     SearchRecord,
     User,
-} from "../../schemas/hkadbus2/schemas";
+} from "schemas/hkadbus2/schemas";
 import {
     AdvertisementRow,
     BusBrandRow,
@@ -20,7 +20,7 @@ import {
     PhotoRow,
     SearchRecordRow,
     UserRow,
-} from "./types";
+} from "database/hkadbus2/types";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

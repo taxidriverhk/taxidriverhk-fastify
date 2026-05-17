@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { PoolClient } from "pg";
-import { Database } from "../types";
+import { Database } from "database/types";
 
 /**
  * Acquires a client from the named pool, runs `fn`, then releases the client.

@@ -1,15 +1,15 @@
 import { FastifyInstance } from "fastify";
-import { usingDatabase } from "../database/csmaps/init";
-import { Database } from "../database/types";
+import { usingDatabase } from "database/csmaps/init";
+import { Database } from "database/types";
 import {
   GetStockDataResponse,
   StockDocument,
   OptionData,
-} from "../schemas/stocks/schemas";
+} from "schemas/stocks/schemas";
 import {
   getStockDataAsync,
   getOptionDataAsync,
-} from "../external/external-data-provider";
+} from "external/external-data-provider";
 
 export default async function stockRoutes(fastify: FastifyInstance) {
   fastify.get<{

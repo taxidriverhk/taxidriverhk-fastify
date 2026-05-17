@@ -7,8 +7,8 @@ import {
   getPhotoByShortId,
   getUsers,
   searchPhotos,
-} from "../database/hkadbus2/impl";
-import { usingHkAdBus2 } from "../database/hkadbus2/init";
+} from "database/hkadbus2/impl";
+import { usingHkAdBus2 } from "database/hkadbus2/init";
 import {
   EntityOptionType,
   GetAdvertisementsResponse,
@@ -21,16 +21,16 @@ import {
   PutPhotoResponse,
   SearchPhotosResponse,
   SearchPhotoFilter,
-} from "../schemas/hkadbus2/schemas";
+} from "schemas/hkadbus2/schemas";
 import {
   normalizeOrderBy,
   validateLanguage,
   validateOrderBy,
   validateSize,
   validateSort,
-} from "../schemas/hkadbus2/validation";
-import { buildAuthHook, generateToken } from "../services/hkadbus2/auth";
-import { putPhoto } from "../services/hkadbus2/photo";
+} from "schemas/hkadbus2/validation";
+import { buildAuthHook, generateToken } from "services/hkadbus2/auth";
+import { putPhoto } from "services/hkadbus2/photo";
 
 export default async function hkadbus2Routes(fastify: FastifyInstance) {
   const secret = process.env.ENCRYPTOR_PASSWORD ?? "changeme";

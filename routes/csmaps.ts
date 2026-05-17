@@ -1,13 +1,13 @@
 import { FastifyInstance } from "fastify";
-import { usingDatabase } from "../database/csmaps/init";
-import { Database } from "../database/types";
+import { usingDatabase } from "database/csmaps/init";
+import { Database } from "database/types";
 import {
   GetMapsResponse,
   GetStatisticsResponse,
   GetTutorialsResponse,
   Map as MapItem,
   Tutorial,
-} from "../schemas/csmaps/schemas";
+} from "schemas/csmaps/schemas";
 
 export default async function csmapsRoutes(fastify: FastifyInstance) {
   fastify.get<{

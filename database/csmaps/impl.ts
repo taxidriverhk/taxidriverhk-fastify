@@ -6,9 +6,9 @@ import {
   ReleaseStatus,
   Statistics,
   Tutorial,
-} from "../../schemas/csmaps/schemas";
-import { Nullable } from "../types";
-import { MapDatabase } from "./types";
+} from "schemas/csmaps/schemas";
+import { Nullable } from "database/types";
+import { MapDatabase } from "database/csmaps/types";
 
 export class SqlMapDatabase extends MapDatabase {
   sqlClient: PoolClient;

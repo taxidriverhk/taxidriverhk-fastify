@@ -3,7 +3,7 @@ import {
     PutPhotoRequest,
     SearchRecord,
     BusCompany,
-} from "../../schemas/hkadbus2/schemas";
+} from "schemas/hkadbus2/schemas";
 import {
     getCategoryByHashKey,
     upsertCategory,
@@ -23,7 +23,7 @@ import {
     insertSearchRecord,
     generateNumericId,
     searchPhotos,
-} from "../../database/hkadbus2/impl";
+} from "database/hkadbus2/impl";
 
 const VALID_LANGUAGES = ["en_us", "zh_hk"];
 const MAX_RETRY = 3;

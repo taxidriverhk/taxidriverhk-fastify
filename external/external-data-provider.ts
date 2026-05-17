@@ -1,11 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import type { StockDocument, OptionData } from "../schemas/stocks/schemas";
+import type { StockDocument, OptionData } from "schemas/stocks/schemas";
 
-import getStockDataFromAlphaVantageAsync from "./alpha-vantage";
+import getStockDataFromAlphaVantageAsync from "external/alpha-vantage";
 import {
   getStockDataAsync as getStockDataFromYahooFinanceAsync,
   getOptionDataAsync as getOptionDataFromYahooFinanceAsync,
-} from "./yahoo-finance";
+} from "external/yahoo-finance";
 
 enum ExternalDataProviders {
   ALPHA_VANTAGE,

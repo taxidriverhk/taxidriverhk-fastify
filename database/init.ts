@@ -1,4 +1,4 @@
-import { Database } from "./types";
+import { Database } from "database/types";
 
 export function getConnectionString(database: Database): string | undefined {
   return new Map([

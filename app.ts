@@ -1,11 +1,11 @@
 import fastifyPostgres from "@fastify/postgres";
 import fastify from "fastify";
 import pg from "pg";
-import { getConnectionString } from "./database/init";
-import { Database } from "./database/types";
-import csmapsRoutes from "./routes/csmaps";
-import hkadbus2Routes from "./routes/hkadbus2";
-import stockRoutes from "./routes/stocks";
+import { getConnectionString } from "database/init";
+import { Database } from "database/types";
+import csmapsRoutes from "routes/csmaps";
+import hkadbus2Routes from "routes/hkadbus2";
+import stockRoutes from "routes/stocks";
 
 const server = fastify({
   logger: {
