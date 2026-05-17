@@ -1,6 +1,6 @@
 import YahooFinance from "yahoo-finance2";
 import type { FastifyInstance } from "fastify";
-import type { StockDocument, OptionData } from "../schemas";
+import type { StockDocument, OptionData } from "../schemas/stocks/schemas";
 
 export async function getStockDataAsync(
   symbol: string,

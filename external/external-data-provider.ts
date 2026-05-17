@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import type { StockDocument, OptionData } from "../schemas";
+import type { StockDocument, OptionData } from "../schemas/stocks/schemas";
 
 import getStockDataFromAlphaVantageAsync from "./alpha-vantage";
 import {
