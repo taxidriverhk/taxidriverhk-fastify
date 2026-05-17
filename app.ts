@@ -4,6 +4,7 @@ import pg from "pg";
 import { getConnectionString } from "./database/init";
 import { Database } from "./database/types";
 import csmapsRoutes from "./routes/csmaps";
+import hkadbus2Routes from "./routes/hkadbus2";
 import stockRoutes from "./routes/stocks";
 
 const server = fastify({
@@ -31,6 +32,7 @@ Object.values(Database).forEach((db) => {
 });
 
 server.register(csmapsRoutes);
+server.register(hkadbus2Routes, { prefix: "/hkadbus2" });
 server.register(stockRoutes, { prefix: "/stocks" });
 
 server.listen({ port: 8090, host: "0.0.0.0" }, (err, address) => {
